@@ -1,8 +1,7 @@
-import 'package:ios_countdown/models/CountdownModel.dart';
 import 'package:flutter/material.dart';
+import 'package:ios_countdown/models/countdown_model.dart';
+import 'package:ios_countdown/screens/countdown_widget.dart';
 import 'package:provider/provider.dart';
-
-import 'screens/CountdownWidget.dart';
 
 void main() => runApp(CountdownApp());
 

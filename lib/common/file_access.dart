@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ios_countdown/models/CountdownModel.dart';
+import 'package:ios_countdown/models/countdown_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FileAccess {

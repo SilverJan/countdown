@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:ios_countdown/common/Config.dart';
-import 'package:ios_countdown/common/Common.dart';
-import 'package:ios_countdown/models/CountdownModel.dart';
-import 'package:ios_countdown/screens/AddModifyCountdownWidget.dart';
+import 'package:ios_countdown/common/config.dart';
+import 'package:ios_countdown/common/common.dart';
+import 'package:ios_countdown/models/countdown_model.dart';
+import 'package:ios_countdown/screens/add_modify_countdown_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -159,6 +159,7 @@ class _CountdownWidgetState extends State<CountdownWidget> {
             }
           },
           child: ListTile(
+            isThreeLine: true,
             leading: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [Icon(countdown.icon)]),
@@ -166,9 +167,10 @@ class _CountdownWidgetState extends State<CountdownWidget> {
               "${_printDuration(delta)}",
               // style: TextStyle(fontSize: 18.0),
             ),
-            subtitle: Text(
-                "${countdown.label} (${formatter.format(countdown.time)})"),
-            // contentPadding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+            subtitle: Container(
+                margin: EdgeInsets.only(top: 5),
+                child: Text("${countdown.label}\n\n"
+                    "${formatter.format(countdown.time)}")),
             enabled: !delta.isNegative,
           )),
       // color: Colors.black45,
