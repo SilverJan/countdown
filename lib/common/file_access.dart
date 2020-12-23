@@ -14,7 +14,7 @@ class FileAccess {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/countdowns.json');
+    return File('$path/.countdowns.json');
   }
 
   Future<List<CountdownItem>> readCountdowns() async {
