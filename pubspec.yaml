@@ -1,4 +1,4 @@
-name: ios_countdown
+name: countdown
 description: A countdown tracker app written in Flutter.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

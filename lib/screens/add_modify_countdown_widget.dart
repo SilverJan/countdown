@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:ios_countdown/common/config.dart';
-import 'package:ios_countdown/models/countdown_model.dart';
+import 'package:countdown/common/config.dart';
+import 'package:countdown/models/countdown_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';

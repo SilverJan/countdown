@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:ios_countdown/common/config.dart';
-import 'package:ios_countdown/common/common.dart';
-import 'package:ios_countdown/models/countdown_model.dart';
-import 'package:ios_countdown/screens/add_modify_countdown_widget.dart';
+import 'package:countdown/common/config.dart';
+import 'package:countdown/common/common.dart';
+import 'package:countdown/models/countdown_model.dart';
+import 'package:countdown/screens/add_modify_countdown_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
