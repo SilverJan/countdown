@@ -2,9 +2,10 @@
 
 A simple countdown tracker app. It allows you to create, modify and delete upcoming and past countdowns.
 
+<p float="left">
 <img src="readme-assets/countdowns_screenshot.png" alt="Countdown view" width="300"/>
 <img src="readme-assets/add_countdown_screenshot.png" alt="Add / modify countdown view" width="300"/>
-
+</p>
 ## Persistence
 
 When creating countdowns, the raw data is persisted on the local system as .json file.
