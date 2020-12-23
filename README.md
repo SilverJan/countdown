@@ -11,7 +11,7 @@ A simple countdown tracker app. It allows you to create, modify and delete upcom
 
 When creating countdowns, the raw data is persisted on the local system as .json file.
 
-On Linux it is stored in ~/Documents/.countdowns.json.
+On Linux it is stored in ~/Documents/countdowns.json.
 
 ## How to build it
 
