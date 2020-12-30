@@ -44,7 +44,7 @@ class FileAccess {
 
     for (var i = 0; i < countdownItems.length; i++) {
       String json = jsonEncode(countdownItems[i]);
-      completeJson += "${json},";
+      completeJson += "$json,";
 
       if (i == countdownItems.length - 1) {
         completeJson = completeJson.substring(0, completeJson.length - 1);
