@@ -26,10 +26,6 @@ class _CountdownWidgetState extends State<CountdownWidget> {
 
   void refresh() {
     this.setState(() {});
-    // if (_countdownModel.hasCountdownsInPast()) {
-    //   publishNotification(
-    //       title: "Expired countdowns", msg: "You have expired countdowns!");
-    // }
   }
 
   @override
@@ -52,7 +48,7 @@ class _CountdownWidgetState extends State<CountdownWidget> {
                     applicationVersion: Config.VERSION,
                     children: [
                       Text(
-                          "This is an amazing countdown tracker.\n\nCreated with Flutter.")
+                          "This countdown tracker allows you to create, modify and delete future & past events.")
                     ]);
               },
             ),
