@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:countdown/common/config.dart';
 import 'package:countdown/models/countdown_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +65,26 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
     super.dispose();
   }
 
+  Widget _buildBottomCupertinoPicker(Widget picker) {
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.only(top: 6.0),
+      color: CupertinoColors.darkBackgroundGray,
+      child: GestureDetector(
+          // Blocks taps from propagating to the modal sheet and popping.
+          onTap: () {},
+          child: SafeArea(
+            top: false,
+            child: CupertinoTheme(
+              data: CupertinoThemeData(
+                brightness: Brightness.dark,
+              ),
+              child: picker,
+            ),
+          )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final _title = widget.mode == CountdownWidgetModes.add
@@ -86,6 +108,7 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    // Step 1: Enter label
                     TextFormField(
                       controller: _labelInput,
                       decoration: const InputDecoration(
@@ -98,6 +121,7 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                         return null;
                       },
                     ),
+                    // Step 2: Enter date
                     TextFormField(
                       controller: _dateInput,
                       decoration: const InputDecoration(
@@ -109,24 +133,48 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                         return null;
                       },
                       onTap: () async {
-                        DateTime date = DateTime(1900);
+                        // show cupertino style selection, if iOS detected
+                        if (Platform.isIOS) {
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return _buildBottomCupertinoPicker(
+                                CupertinoDatePicker(
+                                  mode: CupertinoDatePickerMode.date,
+                                  // set initialDateTime depending on add or modify mode
+                                  initialDateTime:
+                                      widget.mode == CountdownWidgetModes.add
+                                          ? DateTime.now()
+                                              .add(new Duration(days: 1))
+                                          : widget.selectedItem.time,
+                                  onDateTimeChanged: (DateTime newDateTime) {
+                                    setState(() {
+                                      _dateInput.text =
+                                          _dateFormatter.format(newDateTime);
+                                    });
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          DateTime date = await showDatePicker(
+                            context: context,
+                            // set initialTime depending on add or modify mode
+                            initialDate: widget.mode == CountdownWidgetModes.add
+                                ? DateTime.now().add(new Duration(days: 1))
+                                : widget.selectedItem.time,
 
-                        date = await showDatePicker(
-                          context: context,
-                          // set initialTime depending on add or modify mode
-                          initialDate: widget.mode == CountdownWidgetModes.add
-                              ? DateTime.now().add(new Duration(days: 1))
-                              : widget.selectedItem.time,
-
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(2100),
-                        );
-
-                        if (date != null) {
-                          _dateInput.text = _dateFormatter.format(date);
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime(2100),
+                          );
+                          if (date != null) {
+                            _dateInput.text = _dateFormatter.format(date);
+                          }
                         }
                       },
                     ),
+                    // Step 3: Enter time (if there is a date)
                     if (_dateInputHasValue)
                       TextFormField(
                         controller: _timeInput,
@@ -134,36 +182,80 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                             hintText: "Enter time",
                             focusedBorder: Config.BORDER),
                         onTap: () async {
-                          TimeOfDay time = TimeOfDay.now();
+                          DateTime confirmedDate =
+                              DateTime.parse(_dateInput.text);
 
-                          time = await showTimePicker(
-                            context: context,
-                            // set initialTime depending on add or modify mode
-                            initialTime: widget.mode == CountdownWidgetModes.add
-                                ? TimeOfDay.now()
-                                : TimeOfDay.fromDateTime(
-                                    widget.selectedItem.time),
-                            // builder to enforce 24h format
-                            builder: (BuildContext context, Widget child) {
-                              return MediaQuery(
-                                data: MediaQuery.of(context)
-                                    .copyWith(alwaysUse24HourFormat: true),
-                                child: child,
-                              );
-                            },
-                          );
-                          if (time != null) {
-                            DateTime date = DateTime.parse(_dateInput.text);
-                            DateTime mergedDate = new DateTime(date.year,
-                                date.month, date.day, time.hour, time.minute);
-                            _dateInput.text = _dateFormatter.format(mergedDate);
-                            _timeInput.text = _timeFormatter.format(mergedDate);
+                          // show cupertino style selection, if iOS detected
+                          if (Platform.isIOS) {
+                            showCupertinoModalPopup<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return _buildBottomCupertinoPicker(
+                                  CupertinoDatePicker(
+                                    use24hFormat: true,
+                                    mode: CupertinoDatePickerMode.time,
+                                    // set initialTime depending on add or modify mode
+                                    initialDateTime:
+                                        widget.mode == CountdownWidgetModes.add
+                                            ? DateTime.now()
+                                            : widget.selectedItem.time,
+                                    onDateTimeChanged: (DateTime newDateTime) {
+                                      DateTime mergedDate = new DateTime(
+                                          confirmedDate.year,
+                                          confirmedDate.month,
+                                          confirmedDate.day,
+                                          newDateTime.hour,
+                                          newDateTime.minute);
+                                      _dateInput.text =
+                                          _dateFormatter.format(mergedDate);
+                                      _timeInput.text =
+                                          _timeFormatter.format(mergedDate);
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            TimeOfDay time = await showTimePicker(
+                              context: context,
+                              // set initialTime depending on add or modify mode
+                              initialTime:
+                                  widget.mode == CountdownWidgetModes.add
+                                      ? TimeOfDay.now()
+                                      : TimeOfDay.fromDateTime(
+                                          widget.selectedItem.time),
+                              // builder to enforce 24h format
+                              builder: (BuildContext context, Widget child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: true),
+                                  child: child,
+                                );
+                              },
+                            );
+                            if (time != null) {
+                              DateTime mergedDate = new DateTime(
+                                  confirmedDate.year,
+                                  confirmedDate.month,
+                                  confirmedDate.day,
+                                  time.hour,
+                                  time.minute);
+                              _dateInput.text =
+                                  _dateFormatter.format(mergedDate);
+                              _timeInput.text =
+                                  _timeFormatter.format(mergedDate);
+                            }
                           }
                         },
                       ),
+                    // Step 4: Select icon
                     DropdownButtonFormField<IconData>(
                       value: _dropdownValue,
-                      onChanged: (value) => _dropdownValue = value,
+                      onChanged: (value) {
+                        setState(() {
+                          _dropdownValue = value;
+                        });
+                      },
                       items: [
                         DropdownMenuItem(
                           child: Text("None"),
