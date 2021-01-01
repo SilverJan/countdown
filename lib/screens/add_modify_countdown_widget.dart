@@ -150,10 +150,11 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                     TextFormField(
                       controller: _dateInput,
                       decoration: const InputDecoration(
-                          hintText: "Enter date", focusedBorder: Config.BORDER),
+                          hintText: "Select date",
+                          focusedBorder: Config.BORDER),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter a date';
+                          return 'Please select a date';
                         }
                         return null;
                       },
@@ -206,7 +207,7 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                       TextFormField(
                         controller: _timeInput,
                         decoration: const InputDecoration(
-                            hintText: "Enter time",
+                            hintText: "Select time",
                             focusedBorder: Config.BORDER),
                         onTap: () async {
                           DateTime confirmedDate =
@@ -323,8 +324,14 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                     ),
                     // Step 5: Set alarm
                     CheckboxListTile(
-                        title: Text("Notification"),
+                        title: Text("Notification enabled?"),
+                        subtitle: Text(
+                          "will appear at the time of the event",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        contentPadding: EdgeInsets.only(top: 10),
                         value: _hasAlarm,
+                        activeColor: Config.PRIMARY_COLOR,
                         onChanged: _isNotificationCheckboxEnabled()
                             ? (newValue) {
                                 setState(() {
