@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:timezone/timezone.dart';
 
 enum CountdownWidgetModes { add, modify }
 
@@ -93,7 +92,7 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
 
   Widget _buildBottomCupertinoPicker(Widget picker) {
     return Container(
-      height: 200,
+      height: 216,
       padding: const EdgeInsets.only(top: 6.0),
       color: CupertinoColors.darkBackgroundGray,
       child: GestureDetector(
