@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart';
 
 enum CountdownWidgetModes { add, modify }
 
@@ -30,6 +31,8 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
   IconData _dropdownValue;
   bool _dateInputHasValue = false;
 
+  bool _hasAlarm = false;
+
   DateFormat _dateFormatter = DateFormat('yyyy-MM-dd');
   DateFormat _timeFormatter = DateFormat.Hm();
 
@@ -42,6 +45,7 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
       _timeInput.text = _timeFormatter.format(widget.selectedItem.time);
       _dropdownValue = widget.selectedItem.icon;
       _dateInputHasValue = true;
+      _hasAlarm = widget.selectedItem.hasAlarm;
     }
 
     // Start listening to changes
@@ -63,6 +67,28 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
     _dateInput.dispose();
     _timeInput.dispose();
     super.dispose();
+  }
+
+  /// Returns true if the notification checkbox should be enabled
+  bool _isNotificationCheckboxEnabled() {
+    bool enabled = true;
+    // only if there is a date, start to dig deeper
+    if (_dateInput.text != null && _dateInput.text != "") {
+      DateTime date = _dateFormatter.parse(_dateInput.text);
+      DateTime time;
+      // add time value if available (not the case while creating a new countdown)
+      if (_timeInput.text != null && _timeInput.text != "") {
+        time = _timeFormatter.parse(_timeInput.text);
+      }
+      DateTime merged = time != null
+          ? DateTime(date.year, date.month, date.day, time.hour, time.minute)
+          : date;
+      if (merged.isBefore(DateTime.now())) {
+        enabled = false;
+      }
+    }
+
+    return enabled;
   }
 
   Widget _buildBottomCupertinoPicker(Widget picker) {
@@ -94,7 +120,7 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
     final _buttonSubmitText =
         widget.mode == CountdownWidgetModes.add ? "Add" : "Update";
 
-    final _countdownList = Provider.of<CountdownModel>(context);
+    final _countdownModel = Provider.of<CountdownModel>(context);
     final _formKey = GlobalKey<FormState>();
 
     return BackdropFilter(
@@ -169,7 +195,9 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                             lastDate: DateTime(2100),
                           );
                           if (date != null) {
-                            _dateInput.text = _dateFormatter.format(date);
+                            setState(() {
+                              _dateInput.text = _dateFormatter.format(date);
+                            });
                           }
                         }
                       },
@@ -206,10 +234,12 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                                           confirmedDate.day,
                                           newDateTime.hour,
                                           newDateTime.minute);
-                                      _dateInput.text =
-                                          _dateFormatter.format(mergedDate);
-                                      _timeInput.text =
-                                          _timeFormatter.format(mergedDate);
+                                      setState(() {
+                                        _dateInput.text =
+                                            _dateFormatter.format(mergedDate);
+                                        _timeInput.text =
+                                            _timeFormatter.format(mergedDate);
+                                      });
                                     },
                                   ),
                                 );
@@ -240,10 +270,12 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                                   confirmedDate.day,
                                   time.hour,
                                   time.minute);
-                              _dateInput.text =
-                                  _dateFormatter.format(mergedDate);
-                              _timeInput.text =
-                                  _timeFormatter.format(mergedDate);
+                              setState(() {
+                                _dateInput.text =
+                                    _dateFormatter.format(mergedDate);
+                                _timeInput.text =
+                                    _timeFormatter.format(mergedDate);
+                              });
                             }
                           }
                         },
@@ -289,7 +321,18 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
                       decoration: const InputDecoration(
                           helperText: "Choose icon",
                           focusedBorder: Config.BORDER),
-                    )
+                    ),
+                    // Step 5: Set alarm
+                    CheckboxListTile(
+                        title: Text("Notification"),
+                        value: _hasAlarm,
+                        onChanged: _isNotificationCheckboxEnabled()
+                            ? (newValue) {
+                                setState(() {
+                                  _hasAlarm = newValue;
+                                });
+                              }
+                            : null)
                   ],
                 ),
               ),
@@ -307,16 +350,18 @@ class _AddModifyCountdownWidgetState extends State<AddModifyCountdownWidget> {
 
                   if (widget.mode == CountdownWidgetModes.add) {
                     // add a new countdown item
-                    _countdownList.addCountdown(new CountdownItem(
+                    _countdownModel.addCountdown(new CountdownItem(
                         mergedDateTime,
                         _labelInput.value.text,
-                        _dropdownValue));
+                        _dropdownValue,
+                        _hasAlarm));
                   } else {
                     // modify the values on the actual item
                     widget.selectedItem.label = _labelInput.value.text;
                     widget.selectedItem.time = mergedDateTime;
                     widget.selectedItem.icon = _dropdownValue;
-                    _countdownList.persistCountdownsInFile();
+                    widget.selectedItem.hasAlarm = _hasAlarm;
+                    _countdownModel.updateCountdown(widget.selectedItem);
                   }
                   Navigator.of(context).pop();
                 }

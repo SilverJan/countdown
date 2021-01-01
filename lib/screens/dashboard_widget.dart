@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:countdown/common/config.dart';
 import 'package:countdown/common/common.dart';
+import 'package:countdown/common/config.dart';
 import 'package:countdown/models/countdown_model.dart';
 import 'package:countdown/screens/add_modify_countdown_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,20 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class CountdownWidget extends StatefulWidget {
+class DashboardWidget extends StatefulWidget {
   @override
-  _CountdownWidgetState createState() => _CountdownWidgetState();
+  _DashboardWidgetState createState() => _DashboardWidgetState();
 }
 
-class _CountdownWidgetState extends State<CountdownWidget> {
+class _DashboardWidgetState extends State<DashboardWidget> {
   CountdownModel _countdownModel;
 
   Timer timer;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void refresh() {
     this.setState(() {});
@@ -32,39 +27,10 @@ class _CountdownWidgetState extends State<CountdownWidget> {
   Widget build(BuildContext context) {
     _countdownModel = Provider.of<CountdownModel>(context);
     timer = Timer.periodic(Duration(minutes: 1), (Timer t) => refresh());
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(Config.APP_NAME),
-          leading: Icon(Icons.calendar_today),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.info),
-              tooltip: 'Show app info',
-              onPressed: () {
-                showAboutDialog(
-                    context: context,
-                    applicationName: Config.APP_NAME,
-                    applicationIcon: Icon(Icons.calendar_today),
-                    applicationVersion: Config.VERSION,
-                    children: [
-                      Text(
-                          "This countdown tracker allows you to create, modify and delete future & past events.")
-                    ]);
-              },
-            ),
-          ]),
-      body: _countdownModel.length > 0
-          ? _buildCountdownView()
-          : _buildEmptyListInfo(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(context: context, child: AddModifyCountdownWidget());
-        },
-        tooltip: 'Add countdown',
-        child: const Icon(Icons.add),
-        backgroundColor: Config.PRIMARY_COLOR,
-      ),
-    );
+
+    return _countdownModel.length > 0
+        ? _buildCountdownView()
+        : _buildEmptyListInfo();
   }
 
   Widget _buildEmptyListInfo() {

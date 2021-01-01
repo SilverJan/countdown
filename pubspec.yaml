@@ -17,7 +17,9 @@ dependencies:
   path_provider: ^1.6.11
   uuid: ^2.2.0
   process_run: ^0.10.10+2
-
+  flutter_local_notifications: ^3.0.2
+  timezone: ^0.5.9
+  flutter_native_timezone: ^1.0.4
 
 dev_dependencies:
   flutter_test:
