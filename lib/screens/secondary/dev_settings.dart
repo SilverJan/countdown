@@ -11,7 +11,6 @@ class DevSettingsWidget extends StatefulWidget {
 }
 
 class _DevSettingsWidgetState extends State<DevSettingsWidget> {
-  bool _notificationsEnabled = true;
   NotificationService _notificationService;
 
   @override

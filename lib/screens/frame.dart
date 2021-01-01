@@ -1,3 +1,4 @@
+import 'package:countdown/common/common.dart';
 import 'package:countdown/common/config.dart';
 import 'package:countdown/screens/add_modify_countdown_widget.dart';
 import 'package:countdown/screens/dashboard_widget.dart';
@@ -12,6 +13,22 @@ class Frame extends StatefulWidget {
 class _FrameState extends State<Frame> {
   bool _showDevSettings = false;
   int _devSettingsCounter = 0;
+  String _appVersion = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _getAppVersion();
+  }
+
+  void _getAppVersion() async {
+    if (mounted) {
+      var res = await getAppVersion();
+      setState(() {
+        _appVersion = res;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +70,7 @@ class _FrameState extends State<Frame> {
                     context: context,
                     applicationName: Config.APP_NAME,
                     applicationIcon: Icon(Icons.calendar_today),
-                    applicationVersion: Config.VERSION,
+                    applicationVersion: _appVersion,
                     children: [
                       Text(
                           "This countdown tracker allows you to create, modify and delete future & past events.")
@@ -64,7 +81,8 @@ class _FrameState extends State<Frame> {
       body: DashboardWidget(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(context: context, child: AddModifyCountdownWidget());
+          showDialog(
+              context: context, builder: (ctx) => AddModifyCountdownWidget());
         },
         tooltip: 'Add countdown',
         child: const Icon(Icons.add),
