@@ -39,31 +39,29 @@ class _PendingNotificationWidgetState extends State<PendingNotificationWidget> {
     Timer.periodic(
         Duration(seconds: 5), (Timer t) => getScheduledNotificationRequests());
 
-    return SafeArea(
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text("Pending Notifications"),
-              actions: [
-                IconButton(
-                    icon: Icon(Icons.refresh),
-                    onPressed: () {
-                      getScheduledNotificationRequests();
-                    })
-              ],
-            ),
-            body: pendingRequests.length > 0
-                ? ListView.builder(
-                    itemCount: pendingRequests.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var request = pendingRequests[index];
-                      return ListTile(
-                        title: Text("ID: ${request.id.toString()}"),
-                        subtitle: Text("Body: ${request.body}"),
-                      );
-                    },
-                  )
-                : Center(
-                    child: Text(
-                        "There are no pending requests at this moment."))));
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Pending Notifications"),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  getScheduledNotificationRequests();
+                })
+          ],
+        ),
+        body: pendingRequests.length > 0
+            ? ListView.builder(
+                itemCount: pendingRequests.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var request = pendingRequests[index];
+                  return ListTile(
+                    title: Text("ID: ${request.id.toString()}"),
+                    subtitle: Text("Body: ${request.body}"),
+                  );
+                },
+              )
+            : Center(
+                child: Text("There are no pending requests at this moment.")));
   }
 }
