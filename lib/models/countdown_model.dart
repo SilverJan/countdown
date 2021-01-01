@@ -107,8 +107,7 @@ class CountdownItem extends Comparable {
             ? IconData(int.parse(json['icon'].toString()),
                 fontFamily: 'MaterialIcons')
             : null,
-        hasAlarm =
-            json.containsKey('hasAlarm') ? json['hasAlarm'] == 'true' : false;
+        hasAlarm = json.containsKey('hasAlarm') ? json['hasAlarm'] : false;
 
   Map<String, dynamic> toJson() => {
         'id': id,
