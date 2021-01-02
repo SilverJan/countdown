@@ -21,10 +21,6 @@ class CountdownModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<CountdownItem> get countdownList => countdowns;
-
-  int get length => countdowns.length;
-
   /// Get item by [id].
   CountdownItem getById(String id) =>
       countdowns.firstWhere((element) => element.id == id, orElse: () => null);
@@ -70,7 +66,7 @@ class CountdownModel extends ChangeNotifier {
   }
 
   bool hasCountdownsInPast() {
-    return countdownList.any((CountdownItem element) => element.isInPast());
+    return countdowns.any((CountdownItem element) => element.isInPast());
   }
 }
 

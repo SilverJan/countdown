@@ -28,7 +28,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     _countdownModel = Provider.of<CountdownModel>(context);
     timer = Timer.periodic(Duration(minutes: 1), (Timer t) => refresh());
 
-    return _countdownModel.length > 0
+    return _countdownModel.countdowns.length > 0
         ? _buildCountdownView()
         : _buildEmptyListInfo();
   }
@@ -53,7 +53,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
   }
 
   Widget _buildCountdownListView({bool inPast = false}) {
-    List<CountdownItem> filteredList = _countdownModel.countdownList
+    List<CountdownItem> filteredList = _countdownModel.countdowns
         .where((CountdownItem element) =>
             inPast ? element.isInPast() : !element.isInPast())
         .toList();
