@@ -41,7 +41,7 @@ class _FrameState extends State<Frame> {
             highlightColor: Colors.transparent,
             hoverColor: Colors.transparent,
             onPressed: () {
-              if (_devSettingsCounter >= 5) {
+              if (_devSettingsCounter >= 4) {
                 setState(() {
                   _showDevSettings = true;
                 });
