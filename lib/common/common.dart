@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:package_info/package_info.dart';
 
 Duration getDelta(DateTime from, DateTime to) {
@@ -5,6 +8,11 @@ Duration getDelta(DateTime from, DateTime to) {
 }
 
 Future<String> getAppVersion() async {
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  return packageInfo.version;
+  if (Platform.isIOS || Platform.isAndroid) {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
+  } else {
+    log("Platform not fully supported!");
+    return Future.value("unknown");
+  }
 }
