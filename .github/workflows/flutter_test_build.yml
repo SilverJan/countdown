@@ -1,0 +1,21 @@
+name: Flutter test & build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: beta
+    - run: flutter config --enable-linux-desktop
+    - run: flutter pub get
+    - run: flutter test
+#     - run: flutter build linux
+      
