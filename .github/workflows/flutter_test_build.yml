@@ -17,5 +17,5 @@ jobs:
     - run: flutter config --enable-linux-desktop
     - run: flutter pub get
     - run: flutter test
-    - run: flutter build linux
+#     - run: flutter build linux
       
