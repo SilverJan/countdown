@@ -34,13 +34,12 @@ class _FrameState extends State<Frame> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(Config.APP_NAME),
-          leading: IconButton(
-            icon: Icon(Icons.calendar_today),
+          title: InkWell(
+            child: Text(Config.APP_NAME),
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             hoverColor: Colors.transparent,
-            onPressed: () {
+            onTap: () {
               if (_devSettingsCounter >= 4) {
                 setState(() {
                   _showDevSettings = true;
@@ -69,7 +68,10 @@ class _FrameState extends State<Frame> {
                 showAboutDialog(
                     context: context,
                     applicationName: Config.APP_NAME,
-                    applicationIcon: Icon(Icons.calendar_today),
+                    applicationIcon: Image.asset(
+                      'assets/app_icon_120x120.png',
+                      height: 80,
+                    ),
                     applicationVersion: _appVersion,
                     children: [
                       Text(
