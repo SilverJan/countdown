@@ -22,12 +22,13 @@ dependencies:
   timezone: ^0.5.9
   flutter_native_timezone: ^1.0.4
   flutter_launcher_icons: ^0.8.1
+  intl: ^0.16.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  test: ^1.15.4
-  mockito: ^4.1.3
+  # flutter_test:
+  #   sdk: flutter
+  test: 
+  mockito: 
   http_server: ^0.9.8+3
 
 # config section for flutter_launcher_icons

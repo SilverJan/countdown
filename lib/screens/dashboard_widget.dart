@@ -113,10 +113,10 @@ class _DashboardWidgetState extends State<DashboardWidget> {
             } else {
               showDialog(
                   context: context,
-                  child: AddModifyCountdownWidget(
-                    mode: CountdownWidgetModes.modify,
-                    selectedItem: countdown,
-                  ));
+                  builder: (BuildContext context) => AddModifyCountdownWidget(
+                        mode: CountdownWidgetModes.modify,
+                        selectedItem: countdown,
+                      ));
               return false;
             }
           },
